@@ -4,7 +4,7 @@ import * as qrcode from "qrcode";
 import pako from "pako";
 import * as jose from "jose";
 import smartLogo from "./smart-logo.svg";
-import prettyBytes from 'pretty-bytes';
+import prettyBytes from "pretty-bytes";
 
 interface SHLinkData {
   shlink: string;
@@ -34,10 +34,17 @@ interface ManifestRequest {
 
 interface SHLinkWidgetProps {
   shlinkData: SHLinkData;
-  showDetails: boolean;
+  config: RenderConfig
 }
 
-function SHLinkWidget({ shlinkData, showDetails }: SHLinkWidgetProps) {
+function makeShlinkWithPrefix(shlinkData: SHLinkData, prefix?: string) {
+  if (!prefix) {
+    return shlinkData.shlink;
+  }
+  return `${prefix}#${shlinkData.shlink}`;
+}
+
+function SHLinkWidget({ shlinkData, config }: SHLinkWidgetProps) {
   const [toast, setToast] = useState<string | null>(null);
   const [qrCodeDataURL, setQRCodeDataURL] = useState("");
   const [showQRCode, setShowQRCode] = useState(false);
@@ -49,7 +56,7 @@ function SHLinkWidget({ shlinkData, showDetails }: SHLinkWidgetProps) {
   );
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(shlinkData.shlink);
+    navigator.clipboard.writeText(makeShlinkWithPrefix(shlinkData, config.viewerPrefix));
     makeToast("Copied!");
   };
 
@@ -68,7 +75,7 @@ function SHLinkWidget({ shlinkData, showDetails }: SHLinkWidgetProps) {
   };
 
   const generateQRCode = async () => {
-    const qrCodeDataURL = await qrcode.toDataURL(shlinkData.shlink);
+    const qrCodeDataURL = await qrcode.toDataURL(makeShlinkWithPrefix(shlinkData, config.viewerPrefix));
     setQRCodeDataURL(qrCodeDataURL);
     setShowQRCode(true);
   };
@@ -85,13 +92,59 @@ function SHLinkWidget({ shlinkData, showDetails }: SHLinkWidgetProps) {
   }
 
   return (
-    <div style={{ textAlign: "left", display: "flex", flexDirection: "column", width: "200px"}} >
+    <div
+      style={{
+        textAlign: "left",
+        display: "flex",
+        flexDirection: "column",
+        width: "200px",
+      }}
+    >
       <img style={{ marginBottom: "10px" }} src={smartLogo} alt="SMART Logo" />
-      <div style={{ display: "flex", flexDirection: "row", gap: "2px" , flexWrap: "wrap"}}>
-        <button style={{flexGrow: 1,  flexBasis: "20%", border: "1px solid black"}} onClick={copyToClipboard}>{(toast && toast) || "Copy"}</button>
-        <button style={{flexBasis: "20%", flexShrink: 1,  border: "1px solid black"}} onClick={downloadAllFiles}>Download</button>
-        {!showQRCode && <button style={{ flexShrink: 1,  flexBasis: "20%", border: "1px solid black"}} onClick={generateQRCode}>QR</button>}
-        {showQRCode && <button style={{   flexShrink: 1, flexBasis: "20%", border: "1px solid black"}} onClick={closeQRCode}>Hide</button>}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          gap: "2px",
+          flexWrap: "wrap",
+        }}
+      >
+        <button
+          style={{ flexGrow: 1, flexBasis: "20%", border: "1px solid black" }}
+          onClick={copyToClipboard}
+        >
+          {(toast && toast) || "Copy"}
+        </button>
+        <button
+          style={{ flexBasis: "20%", flexShrink: 1, border: "1px solid black" }}
+          onClick={downloadAllFiles}
+        >
+          Download
+        </button>
+        {!showQRCode && (
+          <button
+            style={{
+              flexShrink: 1,
+              flexBasis: "20%",
+              border: "1px solid black",
+            }}
+            onClick={generateQRCode}
+          >
+            QR
+          </button>
+        )}
+        {showQRCode && (
+          <button
+            style={{
+              flexShrink: 1,
+              flexBasis: "20%",
+              border: "1px solid black",
+            }}
+            onClick={closeQRCode}
+          >
+            Hide
+          </button>
+        )}
       </div>
       {(showQRCode && qrCodeDataURL && (
         <img
@@ -102,7 +155,7 @@ function SHLinkWidget({ shlinkData, showDetails }: SHLinkWidgetProps) {
         />
       )) ||
         null}
-      {(showDetails && (
+      {(config.showDetails && (
         <table>
           <tr>
             <td style={{ paddingRight: "10px" }}>Label</td>
@@ -157,8 +210,11 @@ export async function retrieve(
   if (flag.includes("U")) {
     const response = await fetch(url);
     const encryptedFile = await response.text();
-    const decryptedFile = await decryptFile(encryptedFile, key);
-    files = [{ ...(decryptedFile as File), name: "shl-file.json" }];
+    const decryptedFiles = await decryptFile(encryptedFile, key);
+    files = decryptedFiles.map((file, index) => ({
+      ...(file as File),
+      name: file.name || `shl-file-${index}.json`,
+    }));
   } else {
     const body: ManifestRequest = { recipient };
     if (flag.includes("P") && !passcode) {
@@ -176,14 +232,19 @@ export async function retrieve(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    const manifest = await response.json();
+    const manifest: { files: any[] } = await response.json();
 
-    files = await Promise.all(
-      manifest.files.map(async (file: any) => {
+    await Promise.all(
+      manifest.files.map(async (file: any, index) => {
         const response = await fetch(file.location);
         const encryptedFile = await response.text();
-        const decryptedFile = await decryptFile(encryptedFile, key);
-        return { ...(decryptedFile as File), name: file.name };
+        const decryptedFiles = await decryptFile(encryptedFile, key);
+        decryptedFiles.forEach((file, shcIndex) => {
+          files.push({
+            ...(file as File),
+            name: file.name || `shl-file-${index}-bundle-${shcIndex}.json`,
+          });
+        });
       })
     );
   }
@@ -191,52 +252,63 @@ export async function retrieve(
   return { ...shlinkData, files };
 }
 
+async function decodeHealthCard(vc: string): Promise<Partial<File>> {
+  const compressedPayload = jose.base64url.decode(vc.split(".")[1]);
+  const decompressedPayload = pako.inflateRaw(compressedPayload, {
+    to: "string",
+  });
+  return {
+    contentJson: JSON.parse(decompressedPayload ?? "{}").vc?.credentialSubject?.fhirBundle,
+    mimeType: "application/fhir+json",
+    size: decompressedPayload.length,
+  };
+}
+
 async function decryptFile(
   encryptedFile: string,
   key: string
-): Promise<Partial<File>> {
+): Promise<Array<Partial<File>>> {
   const decryptedFile = await jose.compactDecrypt(
     encryptedFile,
     jose.base64url.decode(key)
   );
   const decryptedPayload = new TextDecoder().decode(decryptedFile.plaintext);
 
-  const mimeType =
-    decryptedFile.protectedHeader.cty ?? decryptedPayload.startsWith("{")
-      ? "application/fhir+json"
-      : "application/smart-health-card";
+  let mimeType = decryptedFile.protectedHeader.cty ?? "application/fhir+json";
+  try {
+    const parsed = JSON.parse(decryptedPayload);
+    if (parsed.verifiableCredential) {
+      mimeType = "application/smart-health-card";
+    }
+  } catch {}
 
   if (mimeType === "application/smart-health-card") {
-    const compressedPayload = jose.base64url.decode(
-      decryptedPayload.split(".")[1]
-    );
-    const decompressedPayload = pako.inflateRaw(compressedPayload, {
-      to: "string",
-    });
-    return {
-      contentJson: JSON.parse(decompressedPayload ?? "{}").vc?.credentialSubject
-        ?.fhirBundle,
-      mimeType,
-      size: decompressedPayload.length,
-    };
+    const vcs = JSON.parse(decryptedPayload).verifiableCredential;
+    return await Promise.all(vcs.map(decodeHealthCard));
   } else if (mimeType === "application/fhir+json") {
-    return {
-      contentJson: JSON.parse(decryptedPayload),
-      mimeType,
-      size: decryptedPayload.length,
-    };
+    return [
+      {
+        contentJson: JSON.parse(decryptedPayload),
+        mimeType,
+        size: decryptedPayload.length,
+      },
+    ];
   }
 
   throw new Error("Unsupported SHL File MIME type: " + mimeType);
 }
 
+interface RenderConfig {
+  showDetails: boolean;
+  viewerPrefix?: string;
+}
 export function render(
   shlinkData: SHLinkData,
   container: Element,
-  showDetails = true
+  config: RenderConfig = { showDetails: true }
 ) {
   preact.render(
-    <SHLinkWidget shlinkData={shlinkData} showDetails={showDetails} />,
+    <SHLinkWidget shlinkData={shlinkData} config={config} />,
     container
   );
 }

@@ -13,10 +13,10 @@
 
     /* Bundler mode */
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
+    // "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "emitDeclarationOnly": true,
+    // "emitDeclarationOnly": true,
     "declaration": true,
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
@@ -28,5 +28,6 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
+  "exclude": ["src/main.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
