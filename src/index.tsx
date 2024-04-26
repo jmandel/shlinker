@@ -8,11 +8,11 @@ import prettyBytes from "pretty-bytes";
 
 interface SHLinkData {
   shlink: string;
+  originalPrefix?: string;
   url: string;
   flag: string;
   key: string;
   label: string;
-  recipient: string;
   files?: File[];
 }
 
@@ -37,11 +37,13 @@ interface SHLinkWidgetProps {
   config: RenderConfig
 }
 
-function makeShlinkWithPrefix(shlinkData: SHLinkData, prefix?: string) {
-  if (!prefix) {
-    return shlinkData.shlink;
+function makeShlinkWithPrefix(shlinkData: SHLinkData, prefix?: string | null) {
+  const prefixToUse = (prefix === null) ? null : prefix ?? shlinkData.originalPrefix;
+
+  if (prefixToUse) {
+    return `${prefixToUse}#${shlinkData.shlink}`;
   }
-  return `${prefix}#${shlinkData.shlink}`;
+  return `${shlinkData.shlink}`;
 }
 
 function SHLinkWidget({ shlinkData, config }: SHLinkWidgetProps) {
@@ -176,14 +178,14 @@ function SHLinkWidget({ shlinkData, config }: SHLinkWidgetProps) {
   );
 }
 
-export function process(
+export function parse(
   shlink?: string,
-  recipient = "Generic Recipient"
 ): SHLinkData {
-  let shlinkToUse = shlink;
-  if (!shlink) {
-    shlinkToUse = window.location.hash.slice(1);
-  }
+
+  const parts = (shlink ?? window.location.href).split("#");
+  const shlinkToUse = parts.at(-1);
+  const viewerPrefix = parts.at(-2);
+
   let shlinkPayloadEncoded = shlinkToUse!.split("shlink:/")?.at(1);
   const payload = jose.base64url.decode(shlinkPayloadEncoded!);
   const payloadText = new TextDecoder().decode(payload);
@@ -195,15 +197,20 @@ export function process(
     flag,
     key,
     label,
-    recipient,
+    originalPrefix: viewerPrefix
   };
+}
+
+interface RetrieveOptions {
+  recipient?: string;
+  passcode?: string;
 }
 
 export async function retrieve(
   shlinkData: SHLinkData,
-  passcode?: string
+  {recipient = "Generic Recipient", passcode}: RetrieveOptions = {}
 ): Promise<SHLinkData> {
-  const { url, flag, key, recipient } = shlinkData;
+  const { url, flag, key } = shlinkData;
 
   let files: File[] = [];
 
@@ -300,7 +307,7 @@ async function decryptFile(
 
 interface RenderConfig {
   showDetails: boolean;
-  viewerPrefix?: string;
+  viewerPrefix?: string | null;
 }
 export function render(
   shlinkData: SHLinkData,

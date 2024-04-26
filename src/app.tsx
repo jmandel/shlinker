@@ -6,9 +6,9 @@ export function App() {
   const shlRef = async function(domElt: any) {
     console.log("dom elt", domElt)
     if (!domElt) return;
-    const shlP = await shlink.process();
+    const shlP = await shlink.parse();
     const shlR = await shlink.retrieve(shlP)
-    await shlink.render(shlR, domElt, { showDetails: true, viewerPrefix: "https://demo.vaxx.link/viewer"})
+    await shlink.render(shlR, domElt, { showDetails: true})
   }
 
 

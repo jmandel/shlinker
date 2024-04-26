@@ -1,91 +1,93 @@
-# `shlinker` for SMART Health Links
+# SMART Health Links Processing Library
 
-The SMART Health Links (SHLink) Processing Library is a powerful and flexible tool for handling SHLinks in web applications. It provides a set of functions to process, retrieve, and render SHLinks, making it easy to integrate SHLink functionality into your projects.
+The SMART Health Links (SHLink) Processing Library is a powerful tool for handling SHLinks in web applications. It provides a set of functions to parse, retrieve, and render SHLinks, making it easy to integrate SHLink functionality into your projects.
 
 ## Key Features
 
-- **SHLink Processing**: The library allows you to process SHLinks and extract relevant information such as the URL, flag, key, label, and recipient. This data can be used to further retrieve and render the associated files.
-
-- **File Retrieval**: With the library, you can easily retrieve the files associated with an SHLink. It supports both single-file retrieval (indicated by the 'U' flag) and multi-file retrieval based on a manifest. The retrieved files are decrypted and returned as an array of `File` objects containing the file name, size, content, and MIME type.
-
-- **Rendering**: The library provides functionality to render the SHLink data and associated files in a user-friendly way. You can render the SHLink widget either directly to a DOM container or as a standalone UI component.
-
-- **TypeScript Support**: The library is written in TypeScript, providing type safety and enhanced developer experience. The defined interfaces (`SHLinkData`, `File`, `SHLinkWidgetProps`) make it easier to understand and work with the data structures used in the library.
-
-- **Customization**: The SHLink widget can be customized to show or hide additional details about the SHLink, such as the label, total number of files, and total size.
-
-- **QR Code Generation**: The library includes functionality to generate QR codes for SHLinks, making it convenient to share and distribute SHLinks in various contexts.
-
-- **Clipboard Integration**: With the library, you can easily copy SHLinks to the clipboard, enabling quick sharing and distribution of links.
-
-- **File Downloads**: The library provides a seamless way to download all the retrieved files associated with an SHLink. Users can download the files with a single click, making it convenient to access and store the shared data.
+- Parse SHLinks and extract relevant information
+- Retrieve files associated with SHLinks
+- Render SHLink widgets with customizable options
+- Decrypt and handle different file types (FHIR, SMART Health Cards)
+- TypeScript support for enhanced developer experience
 
 ## Installation
 
-To install the SMART Health Links Processing Library, you can use npm or yarn:
+Install the library using npm or yarn:
 
-```shell
+```bash
 npm install shlinker
 ```
 
 or
 
-```shell
+```bash
 yarn add shlinker
 ```
 
 ## Usage
 
-Here's a basic example of how to use the library:
+Import the library and use its functions:
 
 ```typescript
-import { process, retrieve, render } from 'shlinker';
+import { parse, retrieve, render } from 'shlinker';
 
-const shlink = 'shlink:/...';
-const recipient = 'John Doe';
+// Parse an SHLink
+const shlinkData = parse('shlink:/...');
 
-// Process the SHLink
-const shlinkData = process(shlink, recipient);
-console.log(shlinkData);
-
-// Retrieve the files associated with the SHLink (optional passcode)
-const files = await retrieve(shlinkData, '123456');
-console.log(files);
+// Retrieve files associated with the SHLink
+const retrievedData = await retrieve(shlinkData, { recipient: 'John Doe' });
 
 // Render the SHLink widget
 const container = document.getElementById('shlink-container');
-render(shlinkData, container, true); // Display additional details
+render(retrievedData, container, { showDetails: true });
 ```
-
-In this example, we first process the SHLink using the `process` function, which extracts the relevant data from the SHLink. Then, we retrieve the associated files using the `retrieve` function, providing the processed SHLink data and an optional passcode. Finally, we render the SHLink widget using the `render` function, specifying the SHLink data, the target DOM container, and a boolean flag to show additional details.
 
 ## API Reference
 
-### `process(shlink?: string, recipient?: string): SHLinkData`
+### `parse(shlink?: string): SHLinkData`
 
-Processes the given SHLink and extracts relevant information.
+Parses an SHLink and extracts relevant information.
 
-- `shlink` (optional): The SHLink to be processed. If not provided, it will be extracted from the current page URL.
-- `recipient` (optional): The recipient name. Defaults to 'Generic Recipient'.
+- `shlink` (optional): The SHLink to parse. If not provided, the current page URL will be used.
 
-Returns an `SHLinkData` object containing the processed SHLink information.
+Returns an `SHLinkData` object containing the parsed information.
 
-### `retrieve(shlinkData: SHLinkData, passcode?: string): Promise<SHLinkData>`
+### `retrieve(shlinkData: SHLinkData, options?: RetrieveOptions): Promise<SHLinkData>`
 
-Retrieves the files associated with the given SHLink data.
+Retrieves files associated with an SHLink.
 
-- `shlinkData`: The processed SHLink data obtained from the `process` function.
-- `passcode` (optional): The passcode required to access the SHLink files, if applicable.
+- `shlinkData`: The parsed SHLink data obtained from `parse()`.
+- `options` (optional): Additional options for file retrieval.
+  - `recipient` (optional): The recipient of the SHLink.
+  - `passcode` (optional): The passcode required to access the SHLink files.
 
 Returns a promise that resolves to an updated `SHLinkData` object with the retrieved files.
 
-### `render(shlinkData: SHLinkData, container: Element, showDetails?: boolean): void`
+### `render(shlinkData: SHLinkData, container: Element, config?: RenderConfig): void`
 
-Renders the SHLink widget using the given SHLink data.
+Renders the SHLink widget using the provided SHLink data.
 
-- `shlinkData`: The processed SHLink data obtained from the `process` function.
+- `shlinkData`: The parsed SHLink data obtained from `parse()` or `retrieve()`.
 - `container`: The DOM element where the SHLink widget will be rendered.
-- `showDetails` (optional): A boolean flag indicating whether to display additional details about the SHLink. Defaults to `true`.
+- `config` (optional): Configuration options for rendering the SHLink widget.
+  - `showDetails` (optional): Determines whether to show additional details in the widget. Default is `true`.
+  - `viewerPrefix` (optional): The prefix to use when generating the SHLink URL for viewing.
+
+## Customization
+
+The `render()` function accepts a `RenderConfig` object that allows you to customize the rendering of the SHLink widget.
+
+- `showDetails` (optional): Set to `true` to display additional details such as label, file count, and total size. Default is `true`.
+- `viewerPrefix` (optional): Specify a custom prefix to use when rendering the SHLink URL for copy-to-clipboard or QR display. Default is the original prefix from the parsed SHLink. Pass `null` to explicitlty strip any prefix from the link.
+
+Example:
+
+```typescript
+render(shlinkData, container, {
+  showDetails: false,
+  viewerPrefix: 'https://example.com/viewer',
+});
+```
 
 ## Contributing
 
