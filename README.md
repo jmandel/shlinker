@@ -2,6 +2,11 @@
 
 The SMART Health Links (SHLink) Processing Library is a powerful tool for handling SHLinks in web applications. It provides a set of functions to parse, retrieve, and render SHLinks, making it easy to integrate SHLink functionality into your projects.
 
+## Example Widget
+
+![image](https://github.com/jmandel/shlinker/assets/313089/cde7f78e-bc57-4336-9683-00d2eb889ffa)
+
+
 ## Key Features
 
 - Parse SHLinks and extract relevant information
