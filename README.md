@@ -1,4 +1,4 @@
-# SMART Health Links (SHLink) Processing Library
+# `shlinker` for SMART Health Links
 
 The SMART Health Links (SHLink) Processing Library is a powerful and flexible tool for handling SHLinks in web applications. It provides a set of functions to process, retrieve, and render SHLinks, making it easy to integrate SHLink functionality into your projects.
 
@@ -25,13 +25,13 @@ The SMART Health Links (SHLink) Processing Library is a powerful and flexible to
 To install the SMART Health Links Processing Library, you can use npm or yarn:
 
 ```shell
-npm install shlink-processing-library
+npm install shlinker
 ```
 
 or
 
 ```shell
-yarn add shlink-processing-library
+yarn add shlinker
 ```
 
 ## Usage
@@ -39,7 +39,7 @@ yarn add shlink-processing-library
 Here's a basic example of how to use the library:
 
 ```typescript
-import { process, retrieve, render } from 'shlink-processing-library';
+import { process, retrieve, render } from 'shlinker';
 
 const shlink = 'shlink:/...';
 const recipient = 'John Doe';
