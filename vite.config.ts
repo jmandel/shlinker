@@ -4,16 +4,25 @@ import { resolve } from 'path'
 
 export default defineConfig({
   build: {
+    minify: false,
+    sourcemap: true,
     lib: {
       entry: resolve(__dirname, 'src/index.tsx'),
       name: 'SHLinker',
       fileName: 'shlinker',
-      // formats: ['es'],
     },
     rollupOptions: {
-      external: [],
-      output: { },
+      output: {
+        format: 'es',
+        sourcemap: true,
+        minifyInternalExports: false,
+        compact: false,
+        
+        globals: {},
+      },
     },
+
   },
-  plugins: [preact()],
+  plugins: [preact(), 
+  ],
 });

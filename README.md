@@ -14,9 +14,39 @@ SHLinker helps web applications work with SMART Health Links and display them co
 - Decrypt and handle different file types (FHIR, SMART Health Cards)
 - TypeScript support for enhanced developer experience
 
+## Static Example
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SHLinker Test</title>
+  </head>
+  <body>
+    <div id="main"></div>
+    <script type="module">
+      import * as shlink from "https://cdn.jsdelivr.net/npm/shlinker@0.2.1/dist/shlinker.js";
+      // ^^ Or download and use a loca copy
+
+      const parsed = await shlink.parse("https://joshuamandel.com/cgm/#shlink:/eyJ1cmwiOiJodHRwczovL2pvc2h1YW1hbmRlbC5jb20vY2dtL3NobC8xMjBkYXlfYWdwX2J1bmRsZV91bmd1ZXNzYWJsZV9zaGxfaWQwMDAwMDAwIiwiZmxhZyI6IkxVIiwia2V5IjoiYWdwX29ic191bmd1ZXNzYWJsZV9yYW5kb21fa2V5MDAwMDAwMDAwMDAwMCIsImxhYmVsIjoiSm9zaCdzIENHTSBEYXRhIn0");
+      const retrieved = await shlink.retrieve(parsed)
+      const main = document.getElementById("main")
+      await shlink.render(retrieved, main, { showDetails: true})
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shlinker@0.2.1/dist/shlinker.css" />
+    <!-- ^^ Or download and use a local copy -->
+  </body>
+</html>
+```
+
+
 ## Installation
 
-Install the library using npm or yarn:
+You can import directly from a single file -- grab shlinker.css and shlinker.js from https://cdn.jsdelivr.net/npm/shlinker/dist/ (or NPM) to get started.
+
+Or install the library using npm or its ilk:
 
 ```bash
 npm install shlinker
@@ -25,7 +55,7 @@ npm install shlinker
 or
 
 ```bash
-yarn add shlinker
+bun install shlinker
 ```
 
 ## Usage
@@ -97,32 +127,7 @@ render(shlinkData, container, {
 
 You can use our supplied CSS to style the widget based on `.class`, or
 you can customize the styling. Either way, include a `shlinker.css` in your
-page.
-
-* If you're manually importing this library in your page, load the CSS and JS
-
-```html
-<head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shlinker/dist/shlinker.css" />
-  <!-- Or if you have a local copy
-  <link rel="stylesheet" href="/shlinker.js" /> -->
-</head>
-<script type="module">
-  import * as shlinker from "https://cdn.jsdelivr.net/npm/shlinker/dist/shlinker.js";
-  // or if you have a local copy
-  import * as shlinker from "./shlinker.js";
-</script>
-```
-
-* If you use a bundler (e.g. `vite` locally) the default CSS will be injected into your page; just supply your own styles later to override.
-
-```ts
-import * as shlinker from "shlinker";
-```
-
-See You can supply your own CSS 
-or adding to the properties in [`src/shlink-widget.css`](./src/shlink-widget.css).
-Otherwie, include the supplied CSS in your page.
+page.  See [`src/shlink-widget.css`](./src/shlink-widget.css).
 
 
 ### Sizing
