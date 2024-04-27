@@ -12,7 +12,7 @@ SHLinker helps web applications work with SMART Health Links and display them co
 
 ## Static Example
 
-If you don't want to use a build process, you can always download or point our CSS and JavaScript files:
+If you don't want to use a build process, you can always download or link to our CSS and JavaScript files:
 
 ```html
 <!doctype html>
@@ -28,6 +28,7 @@ If you don't want to use a build process, you can always download or point our C
       import * as shlink from "https://cdn.jsdelivr.net/npm/shlinker@0.2.1/dist/shlinker.js";
       // ^^ Or download and use a local copy
 
+      // pass a shl directly, or let the library parse it from window.location
       const parsed = await shlink.parse("https://joshuamandel.com/cgm/#shlink:/eyJ1cmwiOiJodHRwczovL2pvc2h1YW1hbmRlbC5jb20vY2dtL3NobC8xMjBkYXlfYWdwX2J1bmRsZV91bmd1ZXNzYWJsZV9zaGxfaWQwMDAwMDAwIiwiZmxhZyI6IkxVIiwia2V5IjoiYWdwX29ic191bmd1ZXNzYWJsZV9yYW5kb21fa2V5MDAwMDAwMDAwMDAwMCIsImxhYmVsIjoiSm9zaCdzIENHTSBEYXRhIn0");
       const retrieved = await shlink.retrieve(parsed)
       const main = document.getElementById("main")
