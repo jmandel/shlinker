@@ -11,10 +11,11 @@ export function App() {
     await shlink.render(shlR, domElt, { showDetails: true})
   }
 
+
   return (
     <>
     <h1>SHLink Widget Demo</h1>
-      <div ref={shlRef}></div>
+      <div style={{padding: "1em", border: "1px dashed #646cff", display: "inline-block"}} ref={shlRef}></div>
     </>
   )
 }

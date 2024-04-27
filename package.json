@@ -1,7 +1,7 @@
 {
   "name": "shlinker",
   "private": false,
-  "version": "0.2.1",
+  "version": "0.2.2",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
@@ -16,9 +16,7 @@
     "pako": "^2.1.0",
     "preact": "^10.19.6",
     "pretty-bytes": "^6.1.1",
-    "qrcode": "^1.5.3",
-    "react-bootstrap": "^2.10.2",
-    "rollup-plugin-typescript2": "^0.36.0"
+    "qrcode": "^1.5.3"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.8.2",

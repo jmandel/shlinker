@@ -28,15 +28,15 @@ SHLinker helps web applications work with SMART Health Links and display them co
     <div id="main"></div>
     <script type="module">
       import * as shlink from "https://cdn.jsdelivr.net/npm/shlinker@0.2.1/dist/shlinker.js";
-      // ^^ Or download and use a loca copy
+      // ^^ Or download and use a local copy
 
       const parsed = await shlink.parse("https://joshuamandel.com/cgm/#shlink:/eyJ1cmwiOiJodHRwczovL2pvc2h1YW1hbmRlbC5jb20vY2dtL3NobC8xMjBkYXlfYWdwX2J1bmRsZV91bmd1ZXNzYWJsZV9zaGxfaWQwMDAwMDAwIiwiZmxhZyI6IkxVIiwia2V5IjoiYWdwX29ic191bmd1ZXNzYWJsZV9yYW5kb21fa2V5MDAwMDAwMDAwMDAwMCIsImxhYmVsIjoiSm9zaCdzIENHTSBEYXRhIn0");
       const retrieved = await shlink.retrieve(parsed)
       const main = document.getElementById("main")
-      await shlink.render(retrieved, main, { showDetails: true})
+      shlink.render(retrieved, main, { showDetails: true})
     </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shlinker@0.2.1/dist/shlinker.css" />
-    <!-- ^^ Or download and use a local copy -->
+    <!-- ^^ Or download and use a local copy --/>
   </body>
 </html>
 ```
