@@ -175,7 +175,7 @@ function SHLinkWidget({ shlinkData, config }: SHLinkWidgetProps) {
         >
           <Download04Icon />
         </button>
-        {typeof navigator.share !== "undefined" && <button
+        {(true || typeof navigator.share !== "undefined") && <button
           className="shlink-widget__button"
           onClick={shareLink}
           title="Share"

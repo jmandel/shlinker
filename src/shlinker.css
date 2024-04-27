@@ -14,14 +14,15 @@
   display: flex;
   flex-direction: row;
   gap: 2px;
-  flex-wrap: wrap;
   background: #64aed033;
-  padding: 4px;
+  font-size: 0px;
 }
 
 .shlink-widget__button {
   flex-grow: 1;
   flex-basis: 20%;
+  padding-top: 8px;
+  padding-bottom: 8px;
   border: none;
   cursor: pointer;
   background: none;
