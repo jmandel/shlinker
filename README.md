@@ -2,10 +2,6 @@
 
 SHLinker helps web applications work with SMART Health Links and display them consistently. It provides functions to parse, retrieve, and render SHLinks, making it easy to integrate SHLink functionality into your projects.
 
-## Example Rendering
-
-![image](https://github.com/jmandel/shlinker/assets/313089/d9d52b06-cdf6-4249-9342-bd7ff54df90a)
-
 ## Key Features
 
 - Parse SHLinks and extract relevant information
@@ -15,6 +11,8 @@ SHLinker helps web applications work with SMART Health Links and display them co
 - TypeScript support for enhanced developer experience
 
 ## Static Example
+
+If you don't want to use a build process, you can always download or point our CSS and JavaScript files:
 
 ```html
 <!doctype html>
@@ -44,9 +42,7 @@ SHLinker helps web applications work with SMART Health Links and display them co
 
 ## Installation
 
-You can import directly from a single file -- grab shlinker.css and shlinker.js from https://cdn.jsdelivr.net/npm/shlinker/dist/ (or NPM) to get started.
-
-Or install the library using npm or its ilk:
+Or If you're using a build process, install the library using npm or its ilk:
 
 ```bash
 npm install shlinker
@@ -127,7 +123,7 @@ render(shlinkData, container, {
 
 You can use our supplied CSS to style the widget based on `.class`, or
 you can customize the styling. Either way, include a `shlinker.css` in your
-page.  See [`src/shlink-widget.css`](./src/shlink-widget.css).
+page.  See [`src/shlinker.css`](./src/shlinker.css).
 
 
 ### Sizing
