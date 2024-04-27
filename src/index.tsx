@@ -85,7 +85,7 @@ function makeShlinkWithPrefix(shlinkData: SHLinkData, prefix?: string | null) {
 function SHLinkWidget({ shlinkData, config }: SHLinkWidgetProps) {
   const [toast, setToast] = useState<string | null>(null);
   const [qrCodeDataURL, setQRCodeDataURL] = useState("");
-  const [showQRCode, setShowQRCode] = useState(false);
+  const [showQRCode, setShowQRCode] = useState(config.qrStartsOpen || false);
 
   const totalFiles = (shlinkData.files || []).length;
   const totalSize = (shlinkData.files || []).reduce(
@@ -356,11 +356,12 @@ async function decryptFile(
 interface RenderConfig {
   showDetails: boolean;
   viewerPrefix?: string | null;
+  qrStartsOpen?: boolean;
 }
 export function render(
   shlinkData: SHLinkData,
   container: Element,
-  config: RenderConfig = { showDetails: true }
+  config: RenderConfig = { showDetails: true, qrStartsOpen: false}
 ) {
   preact.render(
     <SHLinkWidget shlinkData={shlinkData} config={config} />,
