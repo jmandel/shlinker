@@ -1,10 +1,11 @@
 import * as preact from "preact";
-import { useState } from "preact/hooks";
+import { useState, useEffect } from "preact/hooks";
 import * as qrcode from "qrcode";
 import pako from "pako";
 import * as jose from "jose";
 import smartLogo from "./smart-logo.svg";
 import prettyBytes from "pretty-bytes";
+import "./shlinker.css"  
 
 interface SHLinkData {
   shlink: string;
@@ -19,7 +20,7 @@ interface SHLinkData {
 interface File {
   name: string;
   size: number;
-  contentJson: object;
+  contentJson: any;
   mimeType: string;
 }
 
@@ -57,6 +58,8 @@ function SHLinkWidget({ shlinkData, config }: SHLinkWidgetProps) {
     0
   );
 
+  const totalResources = (shlinkData.files || []).map(f => f?.contentJson?.entry?.length || 0).reduce((total, e) => total + e, 0);
+
   const copyToClipboard = () => {
     navigator.clipboard.writeText(makeShlinkWithPrefix(shlinkData, config.viewerPrefix));
     makeToast("Copied!");
@@ -76,9 +79,17 @@ function SHLinkWidget({ shlinkData, config }: SHLinkWidgetProps) {
     });
   };
 
+
+  const qrContainerRef = (qrcodeContainer: HTMLDivElement | null) => {
+      if (!qrcodeContainer) return;
+    const qrcodeHeight = qrcodeContainer.clientWidth;
+    qrcodeContainer.style.setProperty('--qrcode-height', `${qrcodeHeight}px`);
+  };
+
+  useEffect(() => {
+     qrcode.toDataURL(makeShlinkWithPrefix(shlinkData, config.viewerPrefix)).then((dataURL) => setQRCodeDataURL(dataURL));
+  }, [shlinkData])
   const generateQRCode = async () => {
-    const qrCodeDataURL = await qrcode.toDataURL(makeShlinkWithPrefix(shlinkData, config.viewerPrefix));
-    setQRCodeDataURL(qrCodeDataURL);
     setShowQRCode(true);
   };
 
@@ -94,81 +105,48 @@ function SHLinkWidget({ shlinkData, config }: SHLinkWidgetProps) {
   }
 
   return (
-    <div
-      style={{
-        textAlign: "left",
-        display: "flex",
-        flexDirection: "column",
-        width: "200px",
-      }}
-    >
-      <img style={{ marginBottom: "10px" }} src={smartLogo} alt="SMART Logo" />
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          gap: "2px",
-          flexWrap: "wrap",
-        }}
-      >
-        <button
-          style={{ flexGrow: 1, flexBasis: "20%", border: "1px solid black" }}
-          onClick={copyToClipboard}
-        >
+    <div className="shlink-widget">
+      <img className="shlink-widget__logo" src={smartLogo} alt="SMART Logo" />
+      <div className="shlink-widget__button-group">
+        <button className="shlink-widget__button" onClick={copyToClipboard}>
           {(toast && toast) || "Copy"}
         </button>
-        <button
-          style={{ flexBasis: "20%", flexShrink: 1, border: "1px solid black" }}
-          onClick={downloadAllFiles}
-        >
+        <button className="shlink-widget__button" onClick={downloadAllFiles}>
           Download
         </button>
         {!showQRCode && (
-          <button
-            style={{
-              flexShrink: 1,
-              flexBasis: "20%",
-              border: "1px solid black",
-            }}
-            onClick={generateQRCode}
-          >
+          <button className="shlink-widget__button" onClick={generateQRCode}>
             QR
           </button>
         )}
         {showQRCode && (
-          <button
-            style={{
-              flexShrink: 1,
-              flexBasis: "20%",
-              border: "1px solid black",
-            }}
-            onClick={closeQRCode}
-          >
+          <button className="shlink-widget__button" onClick={closeQRCode}>
             Hide
           </button>
         )}
       </div>
-      {(showQRCode && qrCodeDataURL && (
+      <div ref={qrContainerRef} className={`shlink-widget__qrcode-container ${showQRCode ? 'shlink-widget__qrcode-container--expand' : ''}`}>
         <img
+          className="shlink-widget__qrcode"
           onClick={closeQRCode}
-          style={{ width: "calc(100% + 2em)", marginLeft: "-1em" }}
           src={qrCodeDataURL}
           alt="QR Code"
         />
-      )) ||
-        null}
+      </div>
+      {shlinkData.label && <div class="shlink-widget__label">{shlinkData.label}</div> || null}
       {(config.showDetails && (
-        <table>
+        <table className="shlink-widget__details">
+          
           <tr>
-            <td style={{ paddingRight: "10px" }}>Label</td>
-            <td>{shlinkData.label}</td>
-          </tr>
-          <tr>
-            <td style={{ paddingRight: "10px" }}>Files</td>
+            <td>Files</td>
             <td>{totalFiles}</td>
           </tr>
           <tr>
-            <td style={{ paddingRight: "10px" }}>Size</td>
+            <td>FHIR</td>
+            <td>{totalResources}</td>
+          </tr>
+          <tr>
+            <td>Size</td>
             <td>{prettyBytes(totalSize)}</td>
           </tr>
         </table>
@@ -177,6 +155,7 @@ function SHLinkWidget({ shlinkData, config }: SHLinkWidgetProps) {
     </div>
   );
 }
+
 
 export function parse(
   shlink?: string,

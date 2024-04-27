@@ -1,6 +1,6 @@
-# SMART Health Links Processing Library
+# SHLinker: SMART Health Links Processing Library
 
-The SMART Health Links (SHLink) Processing Library is a powerful tool for handling SHLinks in web applications. It provides a set of functions to parse, retrieve, and render SHLinks, making it easy to integrate SHLink functionality into your projects.
+SHLinker helps web applications work with SMART Health Links and display them consistently. It provides functions to parse, retrieve, and render SHLinks, making it easy to integrate SHLink functionality into your projects.
 
 ## Example Rendering
 
@@ -92,6 +92,42 @@ render(shlinkData, container, {
   viewerPrefix: 'https://example.com/viewer',
 });
 ```
+
+### CSS
+
+You can use our supplied CSS to style the widget based on `.class`, or
+you can customize the styling. Either way, include a `shlinker.css` in your
+page.
+
+* If you're manually importing this library in your page, load the CSS and JS
+
+```html
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shlinker/dist/shlinker.css" />
+  <!-- Or if you have a local copy
+  <link rel="stylesheet" href="/shlinker.js" /> -->
+</head>
+<script type="module">
+  import * as shlinker from "https://cdn.jsdelivr.net/npm/shlinker/dist/shlinker.js";
+  // or if you have a local copy
+  import * as shlinker from "./shlinker.js";
+</script>
+```
+
+* If you use a bundler (e.g. `vite` locally) the default CSS will be injected into your page; just supply your own styles later to override.
+
+```ts
+import * as shlinker from "shlinker";
+```
+
+See You can supply your own CSS 
+or adding to the properties in [`src/shlink-widget.css`](./src/shlink-widget.css).
+Otherwie, include the supplied CSS in your page.
+
+
+### Sizing
+
+If you render the widget into an explicitly sized div, it will adjust to fit.
 
 ## Contributing
 

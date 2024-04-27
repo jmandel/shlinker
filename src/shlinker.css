@@ -1,0 +1,48 @@
+.shlink-widget {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+}
+
+.shlink-widget__logo {
+  margin-bottom: 10px;
+}
+
+.shlink-widget__button-group {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+
+.shlink-widget__button {
+  flex-grow: 1;
+  flex-basis: 20%;
+  border: 1px solid black;
+}
+
+.shlink-widget__qrcode-container {
+  overflow: hidden;
+  height: 0px;
+  transition: height 0.1s;
+}
+
+.shlink-widget__qrcode-container--expand {
+    height: var(--qrcode-height);
+}
+
+.shlink-widget__qrcode {
+  width: 100%;
+}
+
+
+.shlink-widget__details td {
+  padding-right: 10px;
+}
+
+.shlink-widget__label {
+  font-weight: bold ;
+  margin-top: 2px;
+  border-bottom: 2px solid #64aed0ff;
+}

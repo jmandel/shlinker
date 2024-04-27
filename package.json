@@ -1,12 +1,12 @@
 {
   "name": "shlinker",
   "private": false,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && tsc && rm dist/app.* && cp src/smart-logo.svg dist",
+    "build": "vite build && tsc && rm dist/app.* && cp src/smart-logo.svg dist && cp src/shlinker.css dist",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -9,5 +9,13 @@
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <!-- <div id="main"></div>
+    <script type="module">
+      import * as shlink from "/shlinker.js?url";
+      const shlP = await shlink.parse("https://joshuamandel.com/cgm/#shlink:/eyJ1cmwiOiJodHRwczovL2pvc2h1YW1hbmRlbC5jb20vY2dtL3NobC8xMjBkYXlfYWdwX2J1bmRsZV91bmd1ZXNzYWJsZV9zaGxfaWQwMDAwMDAwIiwiZmxhZyI6IkxVIiwia2V5IjoiYWdwX29ic191bmd1ZXNzYWJsZV9yYW5kb21fa2V5MDAwMDAwMDAwMDAwMCIsImxhYmVsIjoiSm9zaCdzIENHTSBEYXRhIn0");
+      const shlR = await shlink.retrieve(shlP)
+      await shlink.render(shlR, document.getElementById("main"), { showDetails: false})
+    </script>
+    <link rel="stylesheet" href="/shlinker.css?url" /> -->
   </body>
 </html>
