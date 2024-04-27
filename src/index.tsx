@@ -119,7 +119,7 @@ function SHLinkWidget({ shlinkData, config }: SHLinkWidgetProps) {
       try {
         await navigator.share({
           title: 'SMART Health Link',
-          text: 'Check out this SMART Health Link:',
+          text: '',
           url: makeShlinkWithPrefix(shlinkData, config.viewerPrefix),
         });
         console.log('Link shared successfully');
