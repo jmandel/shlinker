@@ -324,7 +324,8 @@ async function decryptFile(
 ): Promise<Array<Partial<File>>> {
   const decryptedFile = await jose.compactDecrypt(
     encryptedFile,
-    jose.base64url.decode(key)
+    jose.base64url.decode(key),
+    {inflateRaw: async (data: Uint8Array) => pako.inflateRaw(data )}
   );
   const decryptedPayload = new TextDecoder().decode(decryptedFile.plaintext);
 
