@@ -54,6 +54,7 @@ export interface SHLinkData {
   key: string;
   label: string;
   files?: File[];
+  totalFileSize?: number;
 }
 
 interface File {
@@ -70,7 +71,7 @@ interface ManifestRequest {
 
 export interface SHLinkWidgetProps {
   shlinkData: SHLinkData;
-  config: RenderConfig
+  config: RenderConfig;
 }
 
 function makeShlinkWithPrefix(shlinkData: SHLinkData, prefix?: string | null) {
@@ -88,7 +89,7 @@ function SHLinkWidget({ shlinkData, config }: SHLinkWidgetProps) {
   const [showQRCode, setShowQRCode] = useState(config.qrStartsOpen || false);
 
   const totalFiles = (shlinkData.files || []).length;
-  const totalSize = (shlinkData.files || []).reduce(
+  const totalSize = shlinkData.totalFileSize ?? (shlinkData.files || []).reduce(
     (total, file) => total + file.size,
     0
   );
@@ -158,8 +159,8 @@ function SHLinkWidget({ shlinkData, config }: SHLinkWidgetProps) {
 
   return (
     <div className="shlink-widget">
-      <img className="shlink-widget__logo" src={smartLogo} alt="SMART Logo" />
-      <div className="shlink-widget__button-group">
+      {config.logoOverride !== null && <img className="shlink-widget__logo" src={config.logoOverride ?? smartLogo} alt="SMART Logo" /> }
+            <div className="shlink-widget__button-group">
         <button
           className="shlink-widget__button"
           onClick={copyToClipboard}
@@ -211,7 +212,7 @@ function SHLinkWidget({ shlinkData, config }: SHLinkWidgetProps) {
           </tr>
           <tr>
             <td>FHIR</td>
-            <td>{totalResources}</td>
+            <td>{prettyBytes(totalResources).replace("B", "R")}</td>
           </tr>
           <tr>
             <td>Size</td>
@@ -260,10 +261,12 @@ export async function retrieve(
   const { url, flag, key } = shlinkData;
 
   let files: File[] = [];
+  let totalFileSize = 0;
 
   if (flag.includes("U")) {
     const response = await fetch(url);
     const encryptedFile = await response.text();
+    totalFileSize += encryptedFile.length;
     const decryptedFiles = await decryptFile(encryptedFile, key);
     files = decryptedFiles.map((file, index) => ({
       ...(file as File),
@@ -292,6 +295,7 @@ export async function retrieve(
       manifest.files.map(async (file: any, index) => {
         const response = await fetch(file.location);
         const encryptedFile = await response.text();
+        totalFileSize += encryptedFile.length;
         const decryptedFiles = await decryptFile(encryptedFile, key);
         decryptedFiles.forEach((file, shcIndex) => {
           files.push({
@@ -303,7 +307,7 @@ export async function retrieve(
     );
   }
 
-  return { ...shlinkData, files };
+  return { ...shlinkData, files, totalFileSize };
 }
 
 async function decodeHealthCard(vc: string): Promise<Partial<File>> {
@@ -357,6 +361,7 @@ interface RenderConfig {
   showDetails: boolean;
   viewerPrefix?: string | null;
   qrStartsOpen?: boolean;
+  logoOverride?: string | null;
 }
 export function render(
   shlinkData: SHLinkData,

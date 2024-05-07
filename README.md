@@ -103,6 +103,7 @@ Renders the SHLink widget using the provided SHLink data.
 - `config` (optional): Configuration options for rendering the SHLink widget.
   - `showDetails` (optional): Determines whether to show additional details in the widget. Default is `true`.
   - `viewerPrefix` (optional): The prefix to use when generating the SHLink URL for viewing.
+  - `logoOverride` (optional): Set to `null` to remove the logo, or an image URL to replace SMART logo SVG with another image
 
 ## Customization
 
