@@ -69,10 +69,10 @@ const SHLinkWidgetView: preact.FunctionComponent<SHLinkWidgetProps> = ({
   qrCodeDataURL,
   toast,
 }) => {
-  const showDownload = config?.showButtons?.includes("download");
-  const showShare = config?.showButtons?.includes("share");
-  const showQR = config?.showButtons?.includes("qr");
-  const showCopy = config?.showButtons?.includes("copy");
+  const showDownload = config?.showButtons?.includes("download") || !config?.showButtons;
+  const showShare = config?.showButtons?.includes("share") || !config?.showButtons;
+  const showQR = config?.showButtons?.includes("qr") || !config?.showButtons;
+  const showCopy = config?.showButtons?.includes("copy") || !config?.showButtons;
   return (
     <div className="shlink-widget">
       {config.logoOverride !== null && (
