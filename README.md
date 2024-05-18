@@ -34,7 +34,7 @@ If you don't want to use a build process, you can always download or link to our
       const parsed = await shlink.parse("https://joshuamandel.com/cgm/#shlink:/eyJ1cmwiOiJodHRwczovL2pvc2h1YW1hbmRlbC5jb20vY2dtL3NobC8xMjBkYXlfYWdwX2J1bmRsZV91bmd1ZXNzYWJsZV9zaGxfaWQwMDAwMDAwIiwiZmxhZyI6IkxVIiwia2V5IjoiYWdwX29ic191bmd1ZXNzYWJsZV9yYW5kb21fa2V5MDAwMDAwMDAwMDAwMCIsImxhYmVsIjoiSm9zaCdzIENHTSBEYXRhIn0");
       const retrieved = await shlink.retrieve(parsed)
       const main = document.getElementById("main")
-      shlink.render(retrieved, main, { showDetails: true})
+      shlink.render(retrieved, main, { showDetails: true })
     </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shlinker@0.2.1/dist/shlinker.css" />
     <!-- ^^ Or download and use a local copy --/>
@@ -42,10 +42,9 @@ If you don't want to use a build process, you can always download or link to our
 </html>
 ```
 
-
 ## Installation
 
-Or If you're using a build process, install the library using npm or its ilk:
+If you're using a build process, install the library using npm or its ilk:
 
 ```bash
 npm install shlinker
@@ -104,15 +103,22 @@ Renders the SHLink widget using the provided SHLink data.
 - `container`: The DOM element where the SHLink widget will be rendered.
 - `config` (optional): Configuration options for rendering the SHLink widget.
   - `showDetails` (optional): Determines whether to show additional details in the widget. Default is `true`.
+  - `showButtons` (optional): Array of buttons to show in the widget. Can include `copy`, `download`, `share`, and `qr`. If not specified, all buttons are shown.
   - `viewerPrefix` (optional): The prefix to use when generating the SHLink URL for viewing.
-  - `logoOverride` (optional): Set to `null` to remove the logo, or an image URL to replace SMART logo SVG with another image
+  - `qrStartsOpen` (optional): Set to `true` to display the QR code initially. Default is `false`.
+  - `logoOverride` (optional): URL to override the default SMART logo. Set to `null` to remove the logo.
+  - `logoBottom` (optional): URL to add a logo at the bottom of the widget. Set to `null` to remove the bottom logo.
 
 ## Customization
 
 The `render()` function accepts a `RenderConfig` object that allows you to customize the rendering of the SHLink widget.
 
 - `showDetails` (optional): Set to `true` to display additional details such as label, file count, and total size. Default is `true`.
-- `viewerPrefix` (optional): Specify a custom prefix to use when rendering the SHLink URL for copy-to-clipboard or QR display. Default is the original prefix from the parsed SHLink. Pass `null` to explicitlty strip any prefix from the link.
+- `showButtons` (optional): Array of buttons to show in the widget. Can include `copy`, `download`, `share`, and `qr`. If not specified, all buttons are shown.
+- `viewerPrefix` (optional): Specify a custom prefix to use when rendering the SHLink URL for copy-to-clipboard or QR display. Default is the original prefix from the parsed SHLink. Pass `null` to explicitly strip any prefix from the link.
+- `qrStartsOpen` (optional): Set to `true` to display the QR code initially. Default is `false`.
+- `logoOverride` (optional): URL to override the default SMART logo. Set to `null` to remove the logo.
+- `logoBottom` (optional): URL to add a logo at the bottom of the widget. Set to `null` to remove the bottom logo.
 
 Example:
 
@@ -120,15 +126,16 @@ Example:
 render(shlinkData, container, {
   showDetails: false,
   viewerPrefix: 'https://example.com/viewer',
+  showButtons: ['copy', 'download'],
+  qrStartsOpen: true,
+  logoOverride: 'https://example.com/custom-logo.png',
+  logoBottom: 'https://example.com/bottom-logo.png',
 });
 ```
 
 ### CSS
 
-You can use our supplied CSS to style the widget based on `.class`, or
-you can customize the styling. Either way, include a `shlinker.css` in your
-page.  See [`src/shlinker.css`](./src/shlinker.css).
-
+You can use our supplied CSS to style the widget based on `.class`, or you can customize the styling. Either way, include a `shlinker.css` in your page. See [`src/shlinker.css`](./src/shlinker.css).
 
 ### Sizing
 
