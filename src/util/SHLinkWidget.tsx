@@ -1,14 +1,14 @@
 import { useState, useEffect } from "preact/hooks";
 import SHLinkWidgetView, {
-    RenderConfig,
+  RenderConfig,
   SHLinkData,
 } from "../components/SHLinkComponent";
 import * as qrcode from "qrcode";
 
 interface SHLinkWidgetProps {
-    shlinkData: SHLinkData;
-    config: RenderConfig;
-  }
+  shlinkData: SHLinkData;
+  config: RenderConfig;
+}
 
 function makeShlinkWithPrefix(shlinkData: SHLinkData, prefix?: string | null) {
   const prefixToUse =
@@ -19,10 +19,7 @@ function makeShlinkWithPrefix(shlinkData: SHLinkData, prefix?: string | null) {
   }
   return `${shlinkData.shlink}`;
 }
-export function SHLinkWidget({
-  shlinkData,
-  config,
-}: SHLinkWidgetProps) {
+export function SHLinkWidget({ shlinkData, config }: Readonly<SHLinkWidgetProps>) {
   const [toast, setToast] = useState<string | null>(null);
   const [qrCodeDataURL, setQRCodeDataURL] = useState("");
   const [showQRCode, setShowQRCode] = useState(config.qrStartsOpen || false);

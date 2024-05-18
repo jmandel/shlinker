@@ -16,7 +16,7 @@ export interface File {
   mimeType: string;
 }
 
-interface RenderConfig {
+export interface RenderConfig {
   showDetails: boolean;
   showButtons?: string[];
   viewerPrefix?: string | null;
