@@ -9,50 +9,50 @@ import {
 import smartLogo from "../smart-logo.svg";
 import prettyBytes from "pretty-bytes";
 
-
 export interface File {
-    name: string;
-    size: number;
-    contentJson: any;
-    mimeType: string;
-  }
+  name: string;
+  size: number;
+  contentJson: any;
+  mimeType: string;
+}
 
-export interface RenderConfig {
-    showDetails: boolean;
-    viewerPrefix?: string | null;
-    qrStartsOpen?: boolean;
-    logoOverride?: string | null;
-  }
+interface RenderConfig {
+  showDetails: boolean;
+  showButtons?: string[];
+  viewerPrefix?: string | null;
+  qrStartsOpen?: boolean;
+  logoOverride?: string | null;
+  logoBottom?: string | null;
+}
 
 export interface SHLinkData {
-    shlink: string;
-    originalPrefix?: string;
-    url: string;
-    flag: string;
-    key: string;
-    label: string;
-    files?: File[];
-    totalFileSize?: number;
-  }
+  shlink: string;
+  originalPrefix?: string;
+  url: string;
+  flag: string;
+  key: string;
+  label: string;
+  files?: File[];
+  totalFileSize?: number;
+}
 
 export interface SHLinkWidgetProps {
-    shlinkData: SHLinkData;
-    config: RenderConfig;
-    totalFiles: number;
-    totalSize: number;
-    totalResources: number;
-    copyToClipboard: () => void;
-    downloadAllFiles: () => void;
-    shareLink: () => void;
-    generateQRCode: () => void;
-    closeQRCode: () => void;
-    qrContainerRef: (qrcodeContainer: HTMLDivElement | null) => void;
-    showQRCode: boolean;
-    qrCodeDataURL: string;
-    toast: string | null;
-    // Add any other props you're passing to SHLinkWidgetView here
-  }
-  
+  shlinkData: SHLinkData;
+  config: RenderConfig;
+  totalFiles: number;
+  totalSize: number;
+  totalResources: number;
+  copyToClipboard: () => void;
+  downloadAllFiles: () => void;
+  shareLink: () => void;
+  generateQRCode: () => void;
+  closeQRCode: () => void;
+  qrContainerRef: (qrcodeContainer: HTMLDivElement | null) => void;
+  showQRCode: boolean;
+  qrCodeDataURL: string;
+  toast: string | null;
+}
+
 const SHLinkWidgetView: preact.FunctionComponent<SHLinkWidgetProps> = ({
   shlinkData,
   config,
@@ -69,6 +69,10 @@ const SHLinkWidgetView: preact.FunctionComponent<SHLinkWidgetProps> = ({
   qrCodeDataURL,
   toast,
 }) => {
+  const showDownload = config?.showButtons?.includes("download");
+  const showShare = config?.showButtons?.includes("share");
+  const showQR = config?.showButtons?.includes("qr");
+  const showCopy = config?.showButtons?.includes("copy");
   return (
     <div className="shlink-widget">
       {config.logoOverride !== null && (
@@ -79,47 +83,52 @@ const SHLinkWidgetView: preact.FunctionComponent<SHLinkWidgetProps> = ({
         />
       )}
       <div className="shlink-widget__button-group">
-        <button
-          className="shlink-widget__button"
-          onClick={copyToClipboard}
-          title="Copy"
-        >
-          {toast ? <Tick01Icon /> : <Copy01Icon />}
-        </button>
-        <button
-          className="shlink-widget__button"
-          onClick={downloadAllFiles}
-          title="Download"
-        >
-          <Download04Icon />
-        </button>
+            <button
+              className="shlink-widget__button"
+              onClick={copyToClipboard}
+              title="Copy"
+            >
+              {toast ? <Tick01Icon /> : <Copy01Icon show={showCopy} />}
+            </button>
+          <button
+            className="shlink-widget__button"
+            onClick={downloadAllFiles}
+            title="Download FHIR Files"
+          >
+            <Download04Icon show={showDownload} />
+          </button>
         {typeof navigator.share !== "undefined" && (
-          <button
-            className="shlink-widget__button"
-            onClick={shareLink}
-            title="Share"
-          >
-            <Share01Icon />
-          </button>
-        )}
-
-        {!showQRCode && (
-          <button
-            className="shlink-widget__button"
-            onClick={generateQRCode}
-            title="QR"
-          >
-            <QrCodeIcon />
-          </button>
-        )}
-        {showQRCode && (
-          <button
-            className="shlink-widget__button"
-            onClick={closeQRCode}
-            title="QR"
-          >
-            <QrCodeIcon />
-          </button>
+            <button
+              className="shlink-widget__button"
+              onClick={shareLink}
+              title="Share"
+            >
+              <Share01Icon show={showShare} />
+            </button>
+          )}
+        {(
+          <>
+            (
+            {!showQRCode && (
+              <button
+                className="shlink-widget__button"
+                onClick={generateQRCode}
+                title="QR"
+              >
+                <QrCodeIcon show={showQR} />
+              </button>
+            )}
+            {showQRCode && (
+              <button
+                className="shlink-widget__button"
+                onClick={closeQRCode}
+                title="QR"
+              >
+                <QrCodeIcon show={showQR}/>
+              </button>
+            )}
+            )
+          </>
         )}
       </div>
       <div
@@ -165,6 +174,13 @@ const SHLinkWidgetView: preact.FunctionComponent<SHLinkWidgetProps> = ({
         </table>
       )) ||
         null}
+      {config.logoBottom !== null && (
+        <img
+          className="shlink-widget__logo-bottom"
+          src={config.logoBottom}
+          alt="Logo"
+        />
+      )}
     </div>
   );
 };
