@@ -83,30 +83,30 @@ const SHLinkWidgetView: preact.FunctionComponent<SHLinkWidgetProps> = ({
         />
       )}
       <div className="shlink-widget__button-group">
-            <button
-              className="shlink-widget__button"
-              onClick={copyToClipboard}
-              title="Copy"
-            >
-              {toast ? <Tick01Icon /> : <Copy01Icon show={showCopy} />}
-            </button>
+        <button
+          className="shlink-widget__button"
+          onClick={copyToClipboard}
+          title="Copy"
+        >
+          {toast ? <Tick01Icon /> : <Copy01Icon show={showCopy} />}
+        </button>
+        <button
+          className="shlink-widget__button"
+          onClick={downloadAllFiles}
+          title="Download FHIR Files"
+        >
+          <Download04Icon show={showDownload} />
+        </button>
+        {typeof navigator.share !== "undefined" && (
           <button
             className="shlink-widget__button"
-            onClick={downloadAllFiles}
-            title="Download FHIR Files"
+            onClick={shareLink}
+            title="Share"
           >
-            <Download04Icon show={showDownload} />
+            <Share01Icon show={showShare} />
           </button>
-        {typeof navigator.share !== "undefined" && (
-            <button
-              className="shlink-widget__button"
-              onClick={shareLink}
-              title="Share"
-            >
-              <Share01Icon show={showShare} />
-            </button>
-          )}
-        {(
+        )}
+        {
           <>
             (
             {!showQRCode && (
@@ -124,12 +124,12 @@ const SHLinkWidgetView: preact.FunctionComponent<SHLinkWidgetProps> = ({
                 onClick={closeQRCode}
                 title="QR"
               >
-                <QrCodeIcon show={showQR}/>
+                <QrCodeIcon show={showQR} />
               </button>
             )}
             )
           </>
-        )}
+        }
       </div>
       <div
         ref={qrContainerRef}
@@ -174,7 +174,7 @@ const SHLinkWidgetView: preact.FunctionComponent<SHLinkWidgetProps> = ({
         </table>
       )) ||
         null}
-      {config.logoBottom !== null && (
+      {config.logoBottom && (
         <img
           className="shlink-widget__logo-bottom"
           src={config.logoBottom}
