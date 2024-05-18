@@ -14,6 +14,8 @@ SHLinker helps web applications work with SMART Health Links and display them co
 
 If you don't want to use a build process, you can always download or link to our CSS and JavaScript files:
 
+![image](https://github.com/jmandel/shlinker/assets/313089/b7fb7273-d23f-4c39-a292-ec7511c0302d)
+
 ```html
 <!doctype html>
 <html lang="en">
