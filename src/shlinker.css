@@ -10,6 +10,10 @@
   margin-bottom: 10px;
 }
 
+.shlink-widget__logo-bottom {
+  margin-top: 10px;
+}
+
 .shlink-widget__button-group {
   display: flex;
   flex-direction: row;
