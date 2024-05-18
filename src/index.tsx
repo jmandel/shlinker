@@ -159,7 +159,7 @@ function SHLinkWidget({ shlinkData, config }: SHLinkWidgetProps) {
     <div className="shlink-widget">
       {config.logoOverride !== null && <img className="shlink-widget__logo" src={config.logoOverride ?? smartLogo} alt="SMART Logo" /> }
             <div className="shlink-widget__button-group">
-        {!!config.showButtons || config?.showButtons?.includes("copy") && <button
+        {!config.showButtons || config?.showButtons?.includes("copy") && <button
           className="shlink-widget__button"
           onClick={copyToClipboard}
           title="Copy"
@@ -167,7 +167,7 @@ function SHLinkWidget({ shlinkData, config }: SHLinkWidgetProps) {
           {toast ? <Tick01Icon /> : <Copy01Icon />}
         </button>
         }
-        {(!!config.showButtons || config?.showButtons?.includes("copy")) && <button
+        {(!config.showButtons || config?.showButtons?.includes("copy")) && <button
           className="shlink-widget__button"
           onClick={downloadAllFiles}
           title="Download"
@@ -175,7 +175,7 @@ function SHLinkWidget({ shlinkData, config }: SHLinkWidgetProps) {
           <Download04Icon />
         </button>
         }
-        {((!!config.showButtons || config?.showButtons?.includes("share")) && typeof navigator.share !== "undefined") && <button
+        {((!config.showButtons || config?.showButtons?.includes("share")) && typeof navigator.share !== "undefined") && <button
           className="shlink-widget__button"
           onClick={shareLink}
           title="Share"
@@ -183,7 +183,7 @@ function SHLinkWidget({ shlinkData, config }: SHLinkWidgetProps) {
           <Share01Icon />
         </button>}
         
-        {(!!config.showButtons || config?.showButtons?.includes("qr")) && <>(
+        {(!config.showButtons || config?.showButtons?.includes("qr")) && <>(
         {!showQRCode && (
           <button className="shlink-widget__button" onClick={generateQRCode} title="QR">
           <QrCodeIcon />
