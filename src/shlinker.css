@@ -8,9 +8,11 @@
     color: #213547;
     background-color: #ffffff;
   }
+
   a:hover {
     color: #747bff;
   }
+
   button {
     background-color: #f9f9f9;
   }
@@ -59,6 +61,7 @@
 .shlink-widget__button:hover {
   background: #ffffff99;
 }
+
 .shlink-widget__qrcode-container {
   overflow: hidden;
   height: 0px;
@@ -94,36 +97,58 @@
 }
 
 @media screen and (max-width: 480px) {
+
+  .icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .download-icon {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
   .shlink-container {
-    padding: 2em; /* Increase the padding */
+    padding: 2em;
   }
 
   .shlink-widget {
-    width: 100%; /* Make the widget take up the full width of its container */
+    width: 100%;
+    /* Make the widget take up the full width of its container */
   }
 
   .shlink-widget__button {
-    padding-top: 16px; /* Increase the padding */
-    padding-bottom: 16px; /* Increase the padding */
+    padding-top: 16px;
+    padding-bottom: 16px;
   }
 
   .shlink-widget__logo {
-    margin-bottom: 20px; /* Increase the margin */
+    margin-bottom: 20px;
+    /* Increase the margin */
+  }
+
+  .shlink-widget__details {
+    padding-right: 20px;
+    font-size: 1.3em;/
   }
 
   .shlink-widget__details td {
-    padding-right: 20px; /* Increase the padding */
+    padding-right: 20px;
   }
 
   .shlink-widget__label {
-    font-size: 1.2em; /* Increase the font size */
+    padding-top: 5px;
+    font-size: 1.5em;
+    /* Increase the font size */
   }
 
   .shlink-widget__qrcode {
-    width: 100%; /* Make the QR code take up the full width of its container */
+    width: 100%;
+    /* Make the QR code take up the full width of its container */
   }
 
   .shlink-widget__qrcode-container shlink-widget__qrcode-container--expand {
-    height: 200px; /* Make the QR code take up the full height of its container */
+    height: 200px;
+    /* Make the QR code take up the full height of its container */
   }
 }
