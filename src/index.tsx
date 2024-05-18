@@ -139,15 +139,6 @@ async function decryptFile(
   throw new Error("Unsupported SHL File MIME type: " + mimeType);
 }
 
-interface RenderConfig {
-  showDetails: boolean;
-  showButtons?: string[];
-  viewerPrefix?: string | null;
-  qrStartsOpen?: boolean;
-  logoOverride?: string | null;
-  logoBottom?: string | null;
-}
-
 export function render(
   shlinkData: SHLinkData,
   container: Element,
