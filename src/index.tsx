@@ -170,7 +170,7 @@ function SHLinkWidget({ shlinkData, config }: SHLinkWidgetProps) {
         {(!config.showButtons || config?.showButtons?.includes("download")) && <button
           className="shlink-widget__button"
           onClick={downloadAllFiles}
-          title="Download"
+          title="Download FHIR Files"
         >
           <Download04Icon />
         </button>
