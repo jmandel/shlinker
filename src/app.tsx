@@ -10,7 +10,7 @@ export function App() {
     );
     const shlR = await shlink.retrieve(shlP);
     shlink.render(shlR, domElt, {
-      showButtons: ["qr", "download", "copy"],
+      showButtons: ["qr", "download", "copy", "share"],
       showDetails: true,
       logoBottom: "https://waverify.doh.wa.gov/imgs/waverifylogo.png",
     });

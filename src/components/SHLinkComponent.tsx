@@ -83,21 +83,25 @@ const SHLinkWidgetView: preact.FunctionComponent<SHLinkWidgetProps> = ({
         />
       )}
       <div className="shlink-widget__button-group">
-        <button
-          className="shlink-widget__button"
-          onClick={copyToClipboard}
-          title="Copy"
-        >
-          {toast ? <Tick01Icon /> : <Copy01Icon show={showCopy} />}
-        </button>
-        <button
-          className="shlink-widget__button"
-          onClick={downloadAllFiles}
-          title="Download FHIR Files"
-        >
-          <Download04Icon show={showDownload} />
-        </button>
-        {typeof navigator.share !== "undefined" && (
+        {showCopy && (
+          <button
+            className="shlink-widget__button"
+            onClick={copyToClipboard}
+            title="Copy"
+          >
+            {toast ? <Tick01Icon /> : <Copy01Icon />}
+          </button>
+        )}
+        {showDownload && (
+          <button
+            className="shlink-widget__button"
+            onClick={downloadAllFiles}
+            title="Download FHIR Files"
+          >
+            <Download04Icon show={showDownload} />
+          </button>
+        )}
+        {showShare && typeof navigator.share !== "undefined" && (
           <button
             className="shlink-widget__button"
             onClick={shareLink}
@@ -109,22 +113,22 @@ const SHLinkWidgetView: preact.FunctionComponent<SHLinkWidgetProps> = ({
         {
           <>
             (
-            {!showQRCode && (
+            {showQR && !showQRCode && (
               <button
                 className="shlink-widget__button"
                 onClick={generateQRCode}
                 title="QR"
               >
-                <QrCodeIcon show={showQR} />
+                <QrCodeIcon />
               </button>
             )}
-            {showQRCode && (
+            {showQR && showQRCode && (
               <button
                 className="shlink-widget__button"
                 onClick={closeQRCode}
                 title="QR"
               >
-                <QrCodeIcon show={showQR} />
+                <QrCodeIcon />
               </button>
             )}
             )
