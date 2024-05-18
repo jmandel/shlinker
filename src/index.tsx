@@ -167,7 +167,7 @@ function SHLinkWidget({ shlinkData, config }: SHLinkWidgetProps) {
           {toast ? <Tick01Icon /> : <Copy01Icon />}
         </button>
         }
-        {(!config.showButtons || config?.showButtons?.includes("copy")) && <button
+        {(!config.showButtons || config?.showButtons?.includes("download")) && <button
           className="shlink-widget__button"
           onClick={downloadAllFiles}
           title="Download"
